@@ -10,33 +10,11 @@ namespace MvcCoreElastiCacheAWS.Controllers
         private RepositoryCoches repo;
         private ServiceAWSCache service;
 
-        public CochesController(RepositoryCoches repo, ServiceAWSCache s
-            ) 
+        public CochesController(RepositoryCoches repo, ServiceAWSCache service)
         {
+            this.repo = repo;
             this.service = service;
-            this.repo = repo;   
         }
-
-        public async Task<IActionResult> SeleccionarFavorito(int idcoche)
-        {
-            //BUSCAMOS EL COCHE DENTRO DEL DOCUMENTO XML (repo)
-            Coche car = this.repo.FindCoche(idcoche);
-            await this.service.AddCocheFavoritoAsync(car);
-            return RedirectToAction("Favoritos");
-        }
-
-        public async Task<IActionResult> Favoritos()
-        {
-            List<Coche> cars = await this.service.GetCochesFavoritosAsync();
-            return View(cars);
-        }
-
-        public async Task<IActionResult> DeleteFavorito(int idcoche)
-        {
-            await this.service.DeleteCocheFavoritoAsync(idcoche);
-            return RedirectToAction("Favoritos");
-        }
-
 
         public IActionResult Index()
         {
@@ -44,13 +22,47 @@ namespace MvcCoreElastiCacheAWS.Controllers
             return View(coches);
         }
 
-        public IActionResult Details(int id) 
+        public IActionResult Details(int id)
         {
             Coche car = this.repo.FindCoche(id);
             return View(car);
         }
 
+        public async Task<IActionResult> SeleccionarFavorito(int idcoche)
 
+        {
+
+            //BUSCAMOS EL COCHE DENTRO DEL DOCUMENTO XML (repo)
+
+            Coche car = this.repo.FindCoche(idcoche);
+
+            await this.service.AddCocheFavoritoAsync(car);
+
+            return RedirectToAction("Favoritos");
+
+        }
+
+
+        public async Task<IActionResult> Favoritos()
+
+        {
+
+            List<Coche> cars = await this.service.GetCochesFavoritosAsync();
+
+            return View(cars);
+
+        }
+
+
+        public async Task<IActionResult> DeleteFavorito(int idcoche)
+
+        {
+
+            await this.service.DeleteCocheFavoritoAsync(idcoche);
+
+            return RedirectToAction("Favoritos");
+
+        }
 
     }
 }
